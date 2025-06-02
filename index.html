@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StoriUp</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0 auto;
+            position: relative;
+            height: 100vh;
+            overflow-x: hidden;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        
+        .app-container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            width: 100%;
+        }
+        
+        .image-card {
+            transition: transform 0.3s ease;
+            flex: 0 0 auto;
+            width: 240px;
+        }
+        
+        .image-card:hover {
+            transform: scale(1.02);
+        }
+        
+        .modal {
+            transition: all 0.3s ease;
+        }
+        
+        .modal-enter {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .modal-enter-active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .category-chip {
+            transition: all 0.2s ease;
+            flex: 0 0 auto;
+        }
+        
+        .category-chip.active {
+            background-color: #4f46e5;
+            color: white;
+        }
+        
+        .login-modal {
+            background-color: rgba(0,0,0,0.5);
+        }
+        
+        .slide-up {
+            animation: slideUp 0.3s forwards;
+        }
+        
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+        
+        .category-section {
+            margin-bottom: 1.5rem;
+        }
+        
+        .category-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+            padding-left: 1rem;
+            color: #374151;
+        }
+        
+        .image-carousel, .category-filter {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 0.75rem;
+            padding: 0 1rem;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE and Edge */
+        }
+        
+        .image-carousel::-webkit-scrollbar,
+        .category-filter::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
+        
+        .carousel-container {
+            position: relative;
+        }
+        
+        
+        
+        .category-filter-container {
+            margin: 1rem 0;
+            position: relative;
+        }
+        
+        .category-filter-title {
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            padding-left: 1rem;
+            color: #374151;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="app-container">
+        <!-- Header -->
+        <header class="bg-white shadow-sm py-4 px-6 flex items-center justify-between sticky top-0 z-10">
+            <div class="flex items-center">
+                <i class="fas fa-camera-retro text-indigo-600 text-2xl mr-2"></i>
+                <h1 class="text-xl font-bold text-gray-800">StoriUp</h1>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button id="searchBtn" class="text-gray-600 hover:text-indigo-600">
+                    <i class="fas fa-search"></i>
+                </button>
+                <button id="userBtn" class="text-gray-600 hover:text-indigo-600">
+                    <i class="fas fa-user-circle text-xl"></i>
+                </button>
+            </div>
+        </header>
+        
+        <!-- Search Bar (Hidden by default) -->
+        <div id="searchBar" class="hidden bg-white px-4 py-3 shadow-sm">
+            <div class="relative">
+                <input type="text" placeholder="Search images..." 
+                       class="w-full pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <main class="flex-1 overflow-y-auto pb-4">
+            <!-- Category Filter -->
+            <div class="category-filter-container">
+                <h3 class="category-filter-title">Popular Categories</h3>
+                <div class="category-filter" id="categoryFilter">
+                    <!-- Categories will be added here dynamically -->
+                </div>
+            </div>
+            
+            <!-- Images by Category -->
+            <div id="imageCategories">
+                <!-- Categories will be added here dynamically -->
+            </div>
+        </main>
+        
+        <!-- Bottom Navigation -->
+        <nav class="bg-white shadow-lg py-3 px-6 flex justify-around items-center">
+            <button class="text-indigo-600 flex flex-col items-center">
+                <i class="fas fa-home text-xl"></i>
+                <span class="text-xs mt-1">Home</span>
+            </button>
+            <button class="text-gray-500 flex flex-col items-center">
+                <i class="fas fa-compass text-xl"></i>
+                <span class="text-xs mt-1">Explorar</span>
+            </button>
+            <button class="text-gray-500 flex flex-col items-center">
+                <i class="fas fa-bookmark text-xl"></i>
+                <span class="text-xs mt-1">Favoritos</span>
+            </button>
+            <button class="text-gray-500 flex flex-col items-center">
+                <i class="fas fa-cog text-xl"></i>
+                <span class="text-xs mt-1">Configurações</span>
+            </button>
+        </nav>
+    </div>
+    
+    <!-- Image Modal -->
+    <div id="imageModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black opacity-70"></div>
+        <div class="relative bg-white rounded-lg w-full max-w-md max-h-[90vh] overflow-hidden slide-up">
+            <button id="closeModal" class="absolute top-3 right-3 bg-black bg-opacity-50 text-white rounded-full p-2 z-10">
+                <i class="fas fa-times"></i>
+            </button>
+            <img id="modalImage" src="" alt="" class="w-full h-auto max-h-[70vh] object-contain">
+            <div class="p-4">
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="font-semibold text-lg" id="imageTitle">Beautiful Sunset</h3>
+                    <span class="text-sm text-gray-500" id="imageSize">2.4 MB</span>
+                </div>
+
+                <div class="flex space-x-2 mb-4">
+                    <span class="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-xs">#sunset</span>
+                    <span class="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-xs">#nature</span>
+                    <span class="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-xs">#sky</span>
+                </div>
+                <button id="downloadBtn" class="w-full bg-indigo-600 text-white py-3 rounded-lg font-medium flex items-center justify-center">
+                    <i class="fas fa-download mr-2"></i> Download
+                </button>
+            </div>
+        </div>
+    </div>
+    
+
+    
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-20 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg hidden z-50">
+        <div class="flex items-center">
+            <i class="fas fa-check-circle mr-2"></i>
+            <span>Image downloaded successfully!</span>
+        </div>
+    </div>
+
+    <script>
+        // Sample image data organized by categories
+        const imagesByCategory = {
+            "Nature": [
+                { id: 1, title: "Mountain View", author: "Jane Smith", size: "1.8 MB", url: "https://images.unsplash.com/photo-1506744038136-4627381bda31?w=500&auto=format", tags: ["mountain", "nature", "landscape"] },
+                { id: 2, title: "Ocean Sunset", author: "Mike Johnson", size: "2.1 MB", url: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=500&auto=format", tags: ["ocean", "sunset", "water"] },
+                { id: 3, title: "Forest Trail", author: "Sarah Williams", size: "1.5 MB", url: "https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=500&auto=format", tags: ["forest", "trees", "path"] },
+                { id: 9, title: "Waterfall", author: "Alex Turner", size: "2.3 MB", url: "https://images.unsplash.com/photo-1511497584788-876760111969?w=500&auto=format", tags: ["waterfall", "nature", "landscape"] },
+                { id: 10, title: "Desert Dunes", author: "Maria Garcia", size: "1.9 MB", url: "https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=500&auto=format", tags: ["desert", "sand", "nature"] }
+            ],
+            "Animals": [
+                { id: 4, title: "Cute Puppy", author: "David Brown", size: "1.2 MB", url: "https://images.unsplash.com/photo-1586671267731-da2cf3ceeb80?w=500&auto=format", tags: ["dog", "pet", "cute"] },
+                { id: 11, title: "Majestic Lion", author: "James Wilson", size: "2.5 MB", url: "https://images.unsplash.com/photo-1534188753412-3e26d0d618d6?w=500&auto=format", tags: ["lion", "wildlife", "africa"] },
+                { id: 12, title: "Colorful Parrot", author: "Sophia Lee", size: "1.7 MB", url: "https://images.unsplash.com/photo-1555169062-013468b47731?w=500&auto=format", tags: ["bird", "parrot", "colorful"] },
+                { id: 13, title: "Playful Dolphins", author: "Robert Clark", size: "2.8 MB", url: "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=500&auto=format", tags: ["dolphin", "ocean", "marine"] }
+            ],
+            "Travel": [
+                { id: 5, title: "Paris Street", author: "Emma Davis", size: "2.4 MB", url: "https://images.unsplash.com/photo-1431274172761-fec41e9e9a00?w=500&auto=format", tags: ["paris", "city", "architecture"] },
+                { id: 14, title: "Tokyo Night", author: "Yuki Tanaka", size: "2.6 MB", url: "https://images.unsplash.com/photo-1542051841857-5f90071e7989?w=500&auto=format", tags: ["tokyo", "japan", "city"] },
+                { id: 15, title: "Venice Canals", author: "Luca Rossi", size: "2.2 MB", url: "https://images.unsplash.com/photo-1514890547357-a9ee288728e0?w=500&auto=format", tags: ["venice", "italy", "canal"] },
+                { id: 16, title: "New York Skyline", author: "Michael Johnson", size: "3.0 MB", url: "https://images.unsplash.com/photo-1485871981521-5b1fd3805eee?w=500&auto=format", tags: ["new york", "skyline", "usa"] }
+            ],
+            "Food": [
+                { id: 6, title: "Delicious Pizza", author: "Robert Wilson", size: "1.7 MB", url: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500&auto=format", tags: ["pizza", "food", "italian"] },
+                { id: 17, title: "Sushi Platter", author: "Kenji Sato", size: "1.9 MB", url: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=500&auto=format", tags: ["sushi", "japanese", "food"] },
+                { id: 18, title: "Burger & Fries", author: "Tom Baker", size: "2.1 MB", url: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500&auto=format", tags: ["burger", "fast food", "american"] },
+                { id: 19, title: "Pasta Dish", author: "Giovanni Bianchi", size: "1.8 MB", url: "https://images.unsplash.com/photo-1555949258-eb67b1ef0ceb?w=500&auto=format", tags: ["pasta", "italian", "food"] }
+            ],
+            "People": [
+                { id: 7, title: "Portrait", author: "Lisa Taylor", size: "1.9 MB", url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format", tags: ["woman", "portrait", "face"] },
+                { id: 20, title: "Business Meeting", author: "Richard Harris", size: "2.3 MB", url: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=500&auto=format", tags: ["business", "meeting", "people"] },
+                { id: 21, title: "Street Musician", author: "Carlos Mendez", size: "2.0 MB", url: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&auto=format", tags: ["music", "street", "performer"] },
+                { id: 22, title: "Children Playing", author: "Anna Kowalski", size: "2.4 MB", url: "https://images.unsplash.com/photo-1542816417-098367b6693d?w=500&auto=format", tags: ["kids", "playing", "happy"] }
+            ],
+            "Abstract": [
+                { id: 8, title: "Abstract Art", author: "Thomas Moore", size: "2.0 MB", url: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=500&auto=format", tags: ["abstract", "art", "colors"] },
+                { id: 23, title: "Geometric Shapes", author: "Sophie Martin", size: "1.8 MB", url: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=500&auto=format", tags: ["geometric", "shapes", "design"] },
+                { id: 24, title: "Color Splash", author: "David Kim", size: "2.2 MB", url: "https://images.unsplash.com/photo-1531219572324-a0172bda8d53?w=500&auto=format", tags: ["colors", "liquid", "abstract"] },
+                { id: 25, title: "Light Trails", author: "Emma Wilson", size: "2.5 MB", url: "https://images.unsplash.com/photo-1519608487953-e999c86e7455?w=500&auto=format", tags: ["light", "long exposure", "abstract"] }
+            ]
+        };
+
+        // DOM elements
+        const mainContent = document.querySelector('main');
+        const searchBtn = document.getElementById('searchBtn');
+        const searchBar = document.getElementById('searchBar');
+        const userBtn = document.getElementById('userBtn');
+        const imageModal = document.getElementById('imageModal');
+        const closeModal = document.getElementById('closeModal');
+        const modalImage = document.getElementById('modalImage');
+        const imageTitle = document.getElementById('imageTitle');
+        const imageSize = document.getElementById('imageSize');
+        const imageAuthor = document.getElementById('imageAuthor');
+        const downloadBtn = document.getElementById('downloadBtn');
+
+        const toast = document.getElementById('toast');
+        const categoryFilter = document.getElementById('categoryFilter');
+        const imageCategories = document.getElementById('imageCategories');
+
+        // Current state
+        let currentImage = null;
+        let activeCategory = "Nature";
+
+        // Initialize the app
+        function init() {
+            renderCategoryFilter();
+            renderCategorySections();
+            setupEventListeners();
+        }
+
+        // Render category filter chips
+        function renderCategoryFilter() {
+            categoryFilter.innerHTML = '';
+            
+            Object.keys(imagesByCategory).forEach(category => {
+                const chip = document.createElement('button');
+                chip.className = `category-chip px-4 py-2 rounded-full bg-gray-100 text-gray-800 font-medium flex items-center ${category === activeCategory ? 'active' : ''}`;
+                chip.innerHTML = `
+                    <span class="text-indigo-600 mr-1">#</span>${category}
+                `;
+                
+                chip.addEventListener('click', () => {
+                    // Remove active class from all chips
+                    document.querySelectorAll('.category-chip').forEach(c => {
+                        c.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked chip
+                    chip.classList.add('active');
+                    activeCategory = category;
+                    
+                    // Scroll to the selected category
+                    const categorySection = document.getElementById(`category-${category.toLowerCase()}`);
+                    if (categorySection) {
+                        categorySection.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+                
+                categoryFilter.appendChild(chip);
+            });
+        }
+
+        // Render category sections with horizontal carousels
+        function renderCategorySections() {
+            imageCategories.innerHTML = '';
+            
+            for (const [category, images] of Object.entries(imagesByCategory)) {
+                const section = document.createElement('div');
+                section.className = 'category-section';
+                section.id = `category-${category.toLowerCase()}`;
+                
+                const title = document.createElement('h2');
+                title.className = 'category-title';
+                title.textContent = category;
+                
+                const carouselContainer = document.createElement('div');
+                carouselContainer.className = 'carousel-container';
+                
+                const carousel = document.createElement('div');
+                carousel.className = 'image-carousel';
+                carousel.id = `carousel-${category.toLowerCase()}`;
+                
+                // Add images to carousel
+                images.forEach(image => {
+                    const imageCard = document.createElement('div');
+                    imageCard.className = 'image-card bg-white rounded-lg overflow-hidden shadow-sm cursor-pointer w-40';
+                    imageCard.innerHTML = `
+                        <img src="${image.url}" alt="${image.title}" class="w-full h-32 object-cover">
+                        <div class="p-2">
+                            <h3 class="text-sm font-medium text-gray-800 truncate">${image.title}</h3>
+                        </div>
+                    `;
+                    
+                    imageCard.addEventListener('click', () => openImageModal(image));
+                    carousel.appendChild(imageCard);
+                });
+                
+                carouselContainer.appendChild(carousel);
+                
+                section.appendChild(title);
+                section.appendChild(carouselContainer);
+                imageCategories.appendChild(section);
+            }
+        }
+
+        // Scroll carousel horizontally
+        function scrollCarousel(category, amount) {
+            const carousel = document.getElementById(`carousel-${category}`);
+            carousel.scrollBy({ left: amount, behavior: 'smooth' });
+        }
+
+        // Open image modal
+        function openImageModal(image) {
+            currentImage = image;
+            modalImage.src = image.url;
+            modalImage.alt = image.title;
+            imageTitle.textContent = image.title;
+            imageSize.textContent = image.size;
+            
+            // Update tags
+            const tagsContainer = document.querySelector('#imageModal .flex.space-x-2.mb-4');
+            tagsContainer.innerHTML = '';
+            image.tags.forEach(tag => {
+                const tagElement = document.createElement('span');
+                tagElement.className = 'px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-xs';
+                tagElement.textContent = `#${tag}`;
+                tagsContainer.appendChild(tagElement);
+            });
+            
+            imageModal.classList.remove('hidden');
+        }
+
+        // Close image modal
+        function closeImageModal() {
+            imageModal.classList.add('hidden');
+        }
+
+        // Download image
+        function downloadImage() {
+            if (!currentImage) return;
+            
+            // In a real app, this would actually download the image
+            // For demo purposes, we'll just show a toast notification
+            showToast('Image downloaded successfully!');
+            closeImageModal();
+        }
+
+        // Show toast notification
+        function showToast(message) {
+            toast.querySelector('span').textContent = message;
+            toast.classList.remove('hidden');
+            
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3000);
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Search button toggle
+            searchBtn.addEventListener('click', () => {
+                searchBar.classList.toggle('hidden');
+            });
+            
+            // User button (login modal)
+            userBtn.addEventListener('click', () => {
+                loginModal.classList.remove('hidden');
+            });
+            
+            // Close modals
+            closeModal.addEventListener('click', closeImageModal);
+            
+            // Download button
+            downloadBtn.addEventListener('click', downloadImage);
+            
+            // Close modals when clicking outside
+            window.addEventListener('click', (e) => {
+                if (e.target === imageModal) closeImageModal();
+            });
+        }
+
+        // Make scrollCarousel function available globally
+        window.scrollCarousel = scrollCarousel;
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
