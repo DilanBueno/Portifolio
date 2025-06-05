@@ -1,0 +1,327 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #000000;
+    min-height: 100vh;
+    overflow-x: hidden;
+    width: 100%;
+}
+
+.header-container {
+    position: relative;
+    max-width: min(1200px, 95%);
+    margin: 20px auto;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 100px;
+    padding: 12px 40px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    width: 100px;
+    height: 64px;
+    animation: unrollScroll 1.5s ease-out forwards;
+}
+
+.header-container::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 140%;
+    height: 250%;
+    background: #a64747;
+    filter: blur(100px);
+    opacity: 0.2;
+    z-index: -1;
+    transition: all 0.5s ease;
+}
+
+
+.header-container:hover::before {
+    opacity: 0.25;
+    height: 300%;
+    width: 160%;
+    filter: blur(90px);
+}
+
+@keyframes unrollScroll {
+    0% {
+        width: 100px;
+    }
+    100% {
+        width: 1200px;
+    }
+}
+
+.header-container > * {
+    opacity: 0;
+    animation: fadeInContent 0.5s ease-out forwards;
+    animation-delay: 1.5s;
+}
+
+@keyframes fadeInContent {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.profile-section {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+.profile-name {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.2rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.profile-section:hover .profile-pic {
+    transform: scale(1.2);
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0);
+}
+
+.profile-section:hover .profile-name {
+    transform: scale(1.1);
+    color: rgba(255, 255, 255, 1);
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0);
+}
+
+.nav-menu {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.nav-menu ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+}
+
+.nav-menu a {
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 500;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.nav-menu a:hover {
+    color: rgba(255, 255, 255, 1);
+}
+
+.hal-button {
+    width: 35px;
+    height: 35px;
+    background: #1a1a1a;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-left: 20px;
+    box-shadow: 
+        0 0 10px rgba(255, 0, 0, 0.2),
+        inset 0 0 15px rgba(0, 0, 0, 0.8);
+    position: relative;
+}
+
+.hal-eye {
+    width: 20px;
+    height: 20px;
+    background: radial-gradient(circle at center,
+        #ff1f1f 0%,
+        #cc0000 50%,
+        #800000 100%);
+    border-radius: 50%;
+    position: relative;
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+    animation: halPulse 4s infinite;
+}
+
+.hal-tooltip {
+    position: absolute;
+    background: rgba(26, 26, 26, 0.95);
+    color: #ff1f1f;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    top: 120%;
+    left: 50%;
+    transform: translateX(-50%) translateY(0);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 31, 31, 0.2);
+    text-shadow: 0 0 5px rgba(255, 31, 31, 0.5);
+}
+
+.hal-tooltip::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-bottom-color: rgba(26, 26, 26, 0.95);
+}
+
+.hal-button:hover .hal-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(5px);
+}
+
+@keyframes halPulse {
+    0% {
+        box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 25px rgba(255, 0, 0, 0.8);
+    }
+    100% {
+        box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+    }
+}
+
+.hal-button:hover .hal-eye {
+    animation: halPulse 1s infinite;
+    box-shadow: 0 0 30px rgba(255, 0, 0, 0.8);
+}
+
+/* Estilos do Menu Toggle */
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    position: relative;
+    z-index: 1000;
+}
+
+.hamburger {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.9);
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.hamburger::before,
+.hamburger::after {
+    content: '';
+    position: absolute;
+    width: 24px;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.9);
+    transition: all 0.3s ease;
+}
+
+.hamburger::before {
+    top: -8px;
+}
+
+.hamburger::after {
+    bottom: -8px;
+}
+
+/* Menu Toggle Ativo */
+.menu-toggle.active .hamburger {
+    background: transparent;
+}
+
+.menu-toggle.active .hamburger::before {
+    transform: rotate(45deg);
+    top: 0;
+}
+
+.menu-toggle.active .hamburger::after {
+    transform: rotate(-45deg);
+    bottom: 0;
+}
+
+/* Media Queries para Responsividade */
+@media (max-width: 768px) {
+    .header-container {
+        padding: 12px 20px;
+        justify-content: space-between;
+    }
+
+    .menu-toggle {
+        display: block;
+        margin-left: 20px;
+    }
+
+    .nav-menu {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 250px;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.95);
+        padding: 80px 20px;
+        transition: all 0.3s ease;
+        margin: 0;
+    }
+
+    .nav-menu.active {
+        right: 0;
+    }
+
+    .nav-menu ul {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .nav-menu a {
+        font-size: 1.2rem;
+    }
+
+    .hal-button {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        margin: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .profile-name {
+        display: none;
+    }
+
+    .header-container {
+        padding: 12px 15px;
+    }
+}
