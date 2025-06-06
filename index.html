@@ -4,10 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meu Portfólio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="index.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <script src="script.js" defer></script>
 </head>
 <body>
+    <!--
+    <div class="loading-screen">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Carregando...</div>
+    </div>
+    -->
+    <canvas id="spaceCanvas"></canvas>
     <header class="header-container">
         <div class="profile-section">
             <img src="images/foto de perfil 3.png" alt="Foto de Dilan B." class="profile-pic">
@@ -16,7 +28,7 @@
         <nav class="nav-menu">
             <ul>
                 <li><a href="#inicio">Início</a></li>
-                <li><a href="#sobre">Sobre</a></li>
+                <li><a href="#sobre">Sobre Mim</a></li>
                 <li><a href="#projetos">Projetos</a></li>
                 <li><a href="#contato">Contato</a></li>
             </ul>
@@ -28,6 +40,36 @@
         <button class="menu-toggle">
             <span class="hamburger"></span>
         </button>
+        <button class="close-button" aria-label="Fechar menu"></button>
     </header>
+
+    <section class="portfolio-title">
+        <div id="rocket-container"></div>
+        <h1 class="glowing-text">Portfolio</h1>
+    </section>
+
+    <br><br><br><br><br><br><br><br>
+
+    <section id="sobre" class="about-section">
+        <div class="about-container">
+            <h2 class="about-title glowing-text">Sobre Mim</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>Olá! Meu nome é Dilan. Sou um desenvolvedor apaixonado por tecnologia e design.</p>
+                    <p>Minha jornada começou [adicione sua história aqui].</p>
+                    <p>Especializo-me em [suas habilidades principais].</p>
+                </div>
+                <div class="about-skills">
+                    <h3>Minhas Habilidades</h3>
+                    <ul>
+                        <li>Desenvolvimento Web</li>
+                        <li>Design UI/UX</li>
+                        <li>[Adicione mais habilidades]</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    
 </body>
 </html>
